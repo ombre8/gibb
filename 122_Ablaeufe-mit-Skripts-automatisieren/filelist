@@ -1,0 +1,15 @@
+insgesamt 28
+drwxrwxr-x 2 vmadmin vmadmin 4096 Jan 29 11:45 .
+drwxr-xr-x 3 vmadmin vmadmin 4096 Jan 29 11:24 ..
+-rw-rw-r-- 1 vmadmin vmadmin    0 Jan 29 11:45 filelist
+-rwx------ 1 vmadmin vmadmin   66 Jan 29 11:23 myFirst.sh
+-rwxrwxr-x 1 vmadmin vmadmin  194 Jan 29 11:43 myNameCase.sh
+-rwxrwxr-x 1 vmadmin vmadmin  146 Jan 29 11:40 myNameParameter.sh
+-rwxrwxr-x 1 vmadmin vmadmin  144 Jan 29 11:40 myNameParameter.sh~
+-rwxrwxr-x 1 vmadmin vmadmin  120 Jan 29 11:29 myName.sh
+filelist
+myFirst.sh
+myNameCase.sh
+myNameParameter.sh
+myNameParameter.sh~
+myName.sh
