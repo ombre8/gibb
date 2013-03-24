@@ -16,15 +16,16 @@ if (a < b):
 
 def ggt(a,b):
   while True:
+    yield int(a),int(b)
     a, b = int(a) % int(b), a
-    yield a
+
 g = ggt(a,b)
 
 counter = 1
 
 for x in g:
   print("Schritt nach Euklid: " + str(counter) + " = " + str(x))
-  print(str(a) + " " + str(b))
   counter += 1
-  if x == 0 : break
+# ValueError: invalid literal for int() with base 10: ''
+ # if  int(str(x[2:str(x).find(",")])) <= 0 : break
 print
