@@ -1,0 +1,331 @@
+<html>
+<head>
+<!-- Import some fonts from googleapis -->
+<link href='http://fonts.googleapis.com/css?family=Wallpoet|Press+Start+2P' rel='stylesheet' type='text/css'>
+<!-- Import some stuff for the Silder -->
+<script src="SmartSlider/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="SmartSlider/smartslider.js" type="text/javascript"></script>
+<link href="SmartSlider/smartslider.css" rel="stylesheet" type="text/css">
+
+<!-- Title -->
+<title>Taschenrechner</title>
+
+<!-- JavaScript -->
+<script language="JavaScript">
+// Check Input for just usable stuff
+function Check(Eingabe) {
+  var nur_das ="0123456789[]()-+*%/.,";
+  for (var i = 0; i < Eingabe.length; i++)
+   if (nur_das.indexOf(Eingabe.charAt(i))<0 ) return false;
+  return true;
+ }
+ 
+// // Define Digits after .
+//
+//var rund=10000000;
+//
+//// Set right  
+//document.getElementsByClassName("button2").item(1).offsetHeight = document.getElementsByClassName("button").item(1).offsetWidth
+//document.getElementsByClassName("button2").item(2).offsetHeight = document.getElementsByClassName("button").item(1).offsetWidth	
+//
+//
+//function round()
+//{
+//  x = window.document.Rechner.Display.value;
+//  rund = Math.pow(10,x);
+//}
+// .toFixed(2); --> Rundet automatisch auf eine Fixe Kommastelle
+//
+//Smartslider:
+$(document).ready(function() {
+      $('#smart-slider').strackbar({ callback: onTick, defaultValue: 2, minValue:0, maxValue:8, sliderHeight: 3, style: 'style2', animate: true, ticks: true, labels: true, trackerHeight: 24, trackerWidth: 24 });
+        });
+function onTick(value) {
+        $('#text').html(value);
+		//window.document.Rechner.Display.value.toFixed(value);
+        }
+//Runden
+
+function round()
+{
+  	// Bedingung, dass nachkommastellen zwischen gespeichert werden können:
+	//if (window.document.Rechner.Display.value.lenght > x.lenght || window.document.Rechner.Display.value.toFixed(Document.getElementById("text")) != x.toFixed(Document.getElementById("text"))){
+	var x = parseInt(window.document.Rechner.Display.value * 1000000000000)/1000000000000;
+	var r = document.getElementById("text").innerHTML.valueOf();
+	//alert(x + "/" +r); //for Testing
+	window.document.Rechner.Display.value = x.toFixed(r);
+	//}
+		
+}
+ // Add the value of the pushed Button to the Display
+ function Hinzufuegen(Eingabe){
+ 	window.document.Rechner.Display.value =  window.document.Rechner.Display.value + Eingabe;
+ }
+ 
+ // Use some special Numbers
+ function use (Eingabe){
+ 	if (Eingabe == "pi"){
+	window.document.Rechner.Display.value =  window.document.Rechner.Display.value + Math.PI;
+	}
+	if (Eingabe == "e"){
+	window.document.Rechner.Display.value =  window.document.Rechner.Display.value + Math.E;
+	}
+ }
+ 
+ // Solve Input on the Display
+ function Ergebnis() {
+  var x = 0;
+  if (Check(window.document.Rechner.Display.value))
+    x = eval(window.document.Rechner.Display.value);
+  window.document.Rechner.Display.value = x; 
+ }
+ 
+
+ // Define some special Functions
+ function Sonderfunktion(Funktion){
+	 if (Check(window.document.Rechner.Display.value)){
+    	if (Funktion == "sqrt"){
+    		x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = Math.sqrt(x); 
+  		}
+  		if (Funktion == "pow"){
+    		x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = x*x; 
+  		}
+  		if (Funktion == "log"){
+  		   x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = Math.log(x); 
+  		}
+  		
+  		if (Funktion == "sin"){
+  			toRadians();
+  			x = window.document.Rechner.Display.value;
+  			window.document.Rechner.Display.value = Math.sin(x);
+			round();
+  		}
+  		if (Funktion == "cos"){
+		      toRadians();
+		      x = window.document.Rechner.Display.value;
+		      window.document.Rechner.Display.value = Math.cos(x);
+			  round();
+  		}  
+  		if (Funktion == "tan"){
+			 // Since infinite in Javascript is just huge but not infinite we catch
+			 // at least 90, 270, etc Degrees
+			 if ((window.document.Rechner.Display.value / 90) % 2 != 0){
+				 window.document.Rechner.Display.value = "Infinite";
+			 }
+			 else
+			 toRadians();
+		     x = window.document.Rechner.Display.value;
+		     window.document.Rechner.Display.value = Math.tan(x);
+			 round();
+  		}
+  		if (Funktion == "2hochx"){
+			x = window.document.Rechner.Display.value;
+			window.document.Rechner.Display.value = Math.pow(2,x);
+  		}
+ 	 }
+ 	 else window.document.Rechner.Display.value = "ERROR";
+ }
+ 
+// From Radians to Degrees
+function toDegrees()
+{
+ x = window.document.Rechner.Display.value;
+ window.document.Rechner.Display.value = x*180/Math.PI;
+}
+
+// From Degrees to Radians
+function toRadians()
+{
+  x = window.document.Rechner.Display.value;
+  window.document.Rechner.Display.value = x*Math.PI/180;
+}
+
+// set some Variables for the Timer
+var intervall=setInterval(function(){Timer()},1000); // Calls Timer() every Second
+var counter = 0;
+function Timer()
+{
+var d=new Date();
+var t=d.toLocaleTimeString();
+var date=d.toLocaleDateString();
+document.getElementById("time").innerHTML=t;
+document.getElementById("date").innerHTML=date;
+
+// to Display Minutes instead of Seconds
+if (counter >= 60){
+document.getElementById("counter").innerHTML=Math.floor(counter/60) + " Minuten " + (counter - (Math.floor(counter/60) * 60)) + " Sekunden";
+}	
+else document.getElementById("counter").innerHTML=counter;
+counter ++;
+}
+</script>
+
+<!-- Style Sheet here -->
+<style type="text/css">
+h1 {
+	font-family: 'Press Start 2P', cursive;
+}
+.button {
+	-moz-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	-webkit-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	box-shadow:inset 0px 0px 0px 1px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family: 'Press Start 2P', cursive;
+	font-size:1em;
+	font-weight:bold;
+	text-align: center;
+	padding:11px 22px;
+	text-decoration:none;
+	text-shadow:2px 2px 0px #ffffff;
+	width: 100%;
+	height: 80px;
+}
+.button2 {
+	-moz-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	-webkit-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	box-shadow:inset 0px 0px 0px 1px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	border:1px solid #dcdcdc;
+	-moz-transform: rotate(90.0deg);  /* FF3.5+ */
+    -o-transform: rotate(90.0deg);  /* Opera 10.5 */
+    -webkit-transform: rotate(90.0deg);  /* Saf3.1+, Chrome */           filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=90 deg);  /* IE6,IE7 */         
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=90)"; /* IE8 */
+	display:inline-block;
+	color:#777777;
+	font-family: 'Press Start 2P', cursive;
+	font-size:0.5em;
+	font-weight:bold;
+	text-align: center;
+	padding:11px 22px;
+	text-decoration:none;
+	text-shadow:2px 2px 0px #ffffff;
+	width: 40px;
+}
+
+.slider.style1
+{
+    background-color: #D7D7D7;
+    border: solid 1px #B6B6B6;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) inset;
+}
+.inner.style1
+{
+    background-color: #DFECF4;
+    -moz-box-shadow: 0 1px 2px rgba(17, 35, 45, 0.6) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(17, 35, 45, 0.6) inset;
+}
+.lgripper.style1
+{
+    background: url(tracker.png) 0px 0px no-repeat;
+}
+
+.button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+.button:active {
+	position:relative;
+	top:1px;
+}
+.display{
+	background-color: #00FF0F;
+	font-family: 'Wallpoet', cursive;
+	font-size: 25px;
+	width: 100%;
+	height: 50px;
+}
+</style>
+</head>
+<h1>Taschenrechner</h1>
+<form name="Rechner" action="" onSubmit="Ergebnis();return false;">
+<table border="5" cellpadding="10" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#B0B0B0">
+<input type="text" name="Display" id="Display" align="right" class="display" autofocus width="100%"></td>
+</tr><tr>
+<td  bgcolor="#c0c0c0">
+<table border="0" cellpadding="0" cellspacing="2" width="100%">
+<tr>
+<td><input type="button" class="button" value="  7   " onClick="Hinzufuegen('7')"></td>
+<td><input type="button" class="button" value="  8   " onClick="Hinzufuegen('8')"></td>
+<td><input type="button" class="button" value="  9   " onClick="Hinzufuegen('9')"></td>
+<td><input type="button" class="button" value="  +   " onClick="Hinzufuegen('+')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="  4   " onClick="Hinzufuegen('4')"></td>
+<td><input type="button" class="button" value="  5   " onClick="Hinzufuegen('5')"></td>
+<td><input type="button" class="button" value="  6   " onClick="Hinzufuegen('6')"></td>
+<td><input type="button" class="button" value="  -   " onClick="Hinzufuegen('-')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="  1   " onClick="Hinzufuegen('1')"></td>
+<td><input type="button" class="button" value="  2   " onClick="Hinzufuegen('2')"></td>
+<td><input type="button" class="button" value="  3   " onClick="Hinzufuegen('3')"></td>
+<td><input type="button" class="button" value="  *   " onClick="Hinzufuegen('*')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="  =   " onClick="Ergebnis()"></td>
+<td><input type="button" class="button" value="  0   " onClick="Hinzufuegen('0')"></td>
+<td><input type="button" class="button" value="  .   " onClick="Hinzufuegen('.')"></td>
+<td><input type="button" class="button" value="  /   " onClick="Hinzufuegen('/')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="sqrt" onClick="Sonderfunktion('sqrt')"></td>
+<td><input type="button" class="button" value=" pow  " onClick="Sonderfunktion('pow')"></td>
+<td><input type="button" class="button" value=" log  " onClick="Sonderfunktion('log')"></td>
+<td><input type="reset"  class="button" value="  C   "></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="sin" onClick="Sonderfunktion('sin')"></td>
+<td><input type="button" class="button" value="cos" onClick="Sonderfunktion('cos')"></td>
+<td><input type="button" class="button" value="tan " onClick="Sonderfunktion('tan')"></td>
+<td><input type="button" class="button" value="2^x " onClick="Sonderfunktion('2hochx')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="Rad-Deg" onClick="toDegrees()"></td>
+<td><input type="button" class="button" value="Deg-Rad" onClick="toRadians()"></td>
+<td><input type="button" class="button" value="&pi;" onClick="use('pi')"></td>
+<td><input type="button" class="button" value="e" onClick="use('e')"></td>
+</tr>
+<tr>
+<td>
+
+<!-- some ideas I didn't finished: <input type="radio" name="deg" id="deg" value="deg" checked> Deg <br />
+<input type="radio" name="deg" id="deg" value="rad"> Rad
+<input type="button" class="button2" value="Set Dig" onClick="Round()"><input type="button"class="button2" value="Runden" onClick="Round()">-->
+<b>Nachkommastellen</b>
+<div id="smart-slider"></div>
+<div id="text" style="clear:both; text-align:center;width:200px;"></div>
+<input type="button" value="runden" onClick="round()">
+</td>
+<td style="text-align:center">Counter: <div id="counter"></div></td>
+<td style="text-align:center">Datum: <div id="date"></div></td>
+<td style="text-align:center">Zeit: <div id="time"></div></td>
+</tr>
+</table>
+</td></tr></table> <!-- ugly Table in a Table style -->
+</form>
+
+</body>
+</html>

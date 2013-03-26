@@ -1,0 +1,167 @@
+<html>
+<head>
+<link href='http://fonts.googleapis.com/css?family=Wallpoet|Press+Start+2P' rel='stylesheet' type='text/css'>
+<script language="JavaScript">
+function Check(Eingabe) {
+  var nur_das ="0123456789[]()-+*%/";
+  for (var i = 0; i < Eingabe.length; i++)
+   if (nur_das.indexOf(Eingabe.charAt(i))<0 ) return false;
+  return true;
+ }
+ function Hinzufuegen(Eingabe){
+	window.document.Rechner.Display.value =  window.document.Rechner.Display.value + Eingabe;
+ }
+ /*function Ergebnis() {
+  var x = 0;
+  if (Check(window.document.Rechner.Display.value))
+    x = eval(window.document.Rechner.Display.value);
+  window.document.Rechner.Display.value = x; 
+ }*/
+ function Enter(){
+	if (Check(window.document.Rechner.Display.value))
+		x = window.document.Rechner.Display.value;
+		window.document.Rechner.Display.value = 0;
+ }
+ function Berechnen(Funktion){
+ 	if (Check(window.document.Rechner.Display.value))
+		y = window.document.Rechner.Display.value;
+		switch (Funktion){
+		case "+":
+		window.document.Rechner.Display.value =	eval(x+y);
+		break;
+		case "-":
+		window.document.Rechner.Display.value =	eval(x - y);
+		break;
+		case "*":
+		window.document.Rechner.Display.value =	eval(x * y);
+		break;
+		case "/":
+		window.document.Rechner.Display.value =	eval(x / y);
+		break;
+		default:
+		window.document.Rechner.Display.value =	"x: "+x+" y: "+y;
+		break;
+		}
+ }
+ function Sonderfunktion(Funktion){
+	 if (Check(window.document.Rechner.Display.value)){
+    	if (Funktion == "sqrt"){
+    		x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = Math.sqrt(x); 
+  		}
+  		if (Funktion == "pow"){
+    		x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = x*x; 
+  		}
+  		if (Funktion == "log"){
+  		   x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = Math.log(x); 
+  		}
+  		if (Funktion == "sin"){
+  			x = eval(window.document.Rechner.Display.value) * (180/Math.Pi);
+  			window.document.Rechner.Display.value = Math.sin(x);
+  		}
+  		if (Funktion == "cos"){
+			x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = Math.Pi() //cos(x* (180/Math.Pi));  		
+  		}
+ 	 }
+ 	 else window.document.Rechner.Display.value = "ERROR";
+ }
+</script>
+<style type="text/css">
+h1 {
+	font-family: 'Press Start 2P', cursive;
+}
+.button {
+	-moz-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	-webkit-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	box-shadow:inset 0px 0px 0px 1px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family: 'Press Start 2P', cursive;
+	font-size:15px;
+	font-weight:bold;
+	text-align: center;
+	padding:11px 22px;
+	text-decoration:none;
+	text-shadow:2px 2px 0px #ffffff;
+	width:120px;
+}
+.button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+.button:active {
+	position:relative;
+	top:1px;
+}
+.display{
+	background-color: #00FF0F;
+	font-family: 'Wallpoet', cursive;
+	font-size: 25px;
+	width: 100%;
+	height: 50px;
+}
+</style>
+</head>
+<h1>Taschenrechner</h1>
+<form name="Rechner" action="" onSubmit="Ergebnis();return false;">
+<table border="5" cellpadding="10" cellspacing="0">
+<tr>
+<td bgcolor="#B0B0B0">
+<input type="text" name="Display" id="Display" align="right" class="display"></td>
+</tr><tr>
+<td  bgcolor="#c0c0c0">
+<table border="0" cellpadding="0" cellspacing="2">
+<tr>
+<td><input type="button" width="60" class="button" value="  7   " onClick="Hinzufuegen('7')"></td>
+<td><input type="button" width="60" class="button" value="  8   " onClick="Hinzufuegen('8')"></td>
+<td><input type="button" width="60" class="button" value="  9   " onClick="Hinzufuegen('9')"></td>
+<td><input type="button" width="60" class="button" value="  +   " onClick="Berechnen('+')"></td>
+</tr>
+<tr>
+<td><input type="button" width="60" class="button" value="  4   " onClick="Hinzufuegen('4')"></td>
+<td><input type="button" width="60" class="button" value="  5   " onClick="Hinzufuegen('5')"></td>
+<td><input type="button" width="60" class="button" value="  6   " onClick="Hinzufuegen('6')"></td>
+<td><input type="button" width="60" class="button" value="  -   " onClick="Berechnen('-')"></td>
+</tr>
+<tr>
+<td><input type="button" width="60" class="button" value="  1   " onClick="Hinzufuegen('1')"></td>
+<td><input type="button" width="60" class="button" value="  2   " onClick="Hinzufuegen('2')"></td>
+<td><input type="button" width="60" class="button" value="  3   " onClick="Hinzufuegen('3')"></td>
+<td><input type="button" width="60" class="button" value="  *   " onClick="Berechnen('*')"></td>
+</tr>
+<tr>
+<td><input type="button" width="60" class="button" value=" Enter " onClick="Enter()"></td>
+<td><input type="button" width="60" class="button" value="  0   " onClick="Hinzufuegen('0')"></td>
+<td><input type="button" width="60" class="button" value="  .   " onClick="Hinzufuegen('.')"></td>
+<td><input type="button" width="60" class="button" value="  /   " onClick="Berechnen('/')"></td>
+</tr>
+<tr>
+<td><input type="button" width="60" class="button" value="sqrt" onClick="Sonderfunktion('sqrt')"></td>
+<td><input type="button" width="60" class="button" value=" pow  " onClick="Sonderfunktion('pow')"></td>
+<td><input type="button" width="60" class="button" value=" log  " onClick="Sonderfunktion('log')"></td>
+<td><input type="reset"  width="60" class="button" value="  C   "></td>
+</tr>
+<tr>
+<td><input type="button" width="60" class="button" value="sin" onClick="Sonderfunktion('sin')"></td>
+<td><input type="button" width="60" class="button" value=" cos" onClick="Sonderfunktion('cos')"></td>
+<td><input type="button" width="60" class="button" value=" tan " onClick="Sonderfunktion('tan')"></td>
+<td><input type="button"  width="60" class="button" value=" 2^x " onClick="Sonderfunktion('2hochx')"></td>
+</tr>
+</table>
+</td></tr></table>
+</form>
+</body>
+</html>

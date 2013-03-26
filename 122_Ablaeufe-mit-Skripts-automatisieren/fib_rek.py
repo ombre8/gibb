@@ -1,6 +1,6 @@
 #!/usr/bin/python3.2
 # Skript: fib_rek.py
-# Erstellt durch Lukas Grimm (ombre@ombre.ch)
+# Erstellt durch Lukas Grimm (ombre@ombre.ch
 # Im Modul 122 an der Gibb
 
 end = input("Anzahl Elemente = ")
@@ -14,5 +14,6 @@ def fib(n):
     else:
         return fib(n-1) + fib(n-2)
 
-for i in range (1,int(end)+1):
+#print (str(fib(int(end))))
+for i in range (0,int(end)+1):
     print("fib(" + str(i) +") = " + str(fib(i)))

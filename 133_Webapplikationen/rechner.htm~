@@ -1,0 +1,235 @@
+<html>
+<head>
+<!-- Import some fonts from googleapis -->
+<link href='http://fonts.googleapis.com/css?family=Wallpoet|Press+Start+2P' rel='stylesheet' type='text/css'>
+<title>Taschenrechner</title>
+
+<!-- Some JavaScript -->
+<script language="JavaScript">
+// Check Input for just usable stuff
+function Check(Eingabe) {
+  var nur_das ="0123456789[]()-+*%/.,";
+  for (var i = 0; i < Eingabe.length; i++)
+   if (nur_das.indexOf(Eingabe.charAt(i))<0 ) return false;
+  return true;
+ }
+ 
+ // Add the pushed Button to the Display
+ function Hinzufuegen(Eingabe){
+ 	window.document.Rechner.Display.value =  window.document.Rechner.Display.value + Eingabe;
+ }
+ 
+ // Use some special Numbers
+ function use (Eingabe){
+ 	if (Eingabe == "pi"){
+	window.document.Rechner.Display.value =  window.document.Rechner.Display.value + Math.PI;
+	}
+	if (Eingabe == "e"){
+	window.document.Rechner.Display.value =  window.document.Rechner.Display.value + Math.E;
+	}
+ }
+ 
+ // Solve Input on the Display
+ function Ergebnis() {
+  var x = 0;
+  if (Check(window.document.Rechner.Display.value))
+    x = eval(window.document.Rechner.Display.value);
+  window.document.Rechner.Display.value = x; 
+ }
+ 
+// Define Digits after .
+
+var rund=10000000;
+
+function round()
+{
+  x = window.document.Rechner.Display.value;
+  rund = Math.pow(10,x);
+}
+ 
+ // Define some special Functions
+ function Sonderfunktion(Funktion){
+	 if (Check(window.document.Rechner.Display.value)){
+    	if (Funktion == "sqrt"){
+    		x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = Math.sqrt(x); 
+  		}
+  		if (Funktion == "pow"){
+    		x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = x*x; 
+  		}
+  		if (Funktion == "log"){
+  		   x = eval(window.document.Rechner.Display.value);
+  			window.document.Rechner.Display.value = Math.log(x); 
+  		}
+  		// Round Sin / Cos / Tan for accurate Results
+  		if (Funktion == "sin"){
+  			toRadians();
+  			x = window.document.Rechner.Display.value;
+  			window.document.Rechner.Display.value = Math.round((Math.sin(x) * 10000000) / 10000000);
+  		}
+  		if (Funktion == "cos"){
+		      toRadians();
+		      x = window.document.Rechner.Display.value;
+		      window.document.Rechner.Display.value = Math.round((Math.cos(x) * 10000000) / 10000000);
+  		}  
+  		if (Funktion == "tan"){Degrees
+		     toRadians();
+		     x = window.document.Rechner.Display.value;
+		     window.document.Rechner.Display.value = Math.round((Math.tan(x) * 10000000) / 10000000);
+  		}
+  		if (Funktion == "2hochx"){
+			x = window.document.Rechner.Display.value;
+			window.document.Rechner.Display.value = Math.pow(2,x);
+  		}
+ 	 }
+ 	 else window.document.Rechner.Display.value = "ERROR";
+ }
+ 
+// From Radians to Degrees
+function toDegrees()
+{
+ x = window.document.Rechner.Display.value;
+ window.document.Rechner.Display.value = x*180/Math.PI;
+}
+
+// From Degrees to Radians
+function toRadians()
+{
+  x = window.document.Rechner.Display.value;
+  window.document.Rechner.Display.value = x*Math.PI/180;
+}
+
+// set some Variables for the Timer
+var intervall=setInterval(function(){Timer()},1000); // Calls Timer() every Second
+var counter = 0;
+function Timer()
+{
+var d=new Date();
+var t=d.toLocaleTimeString();
+var date=d.toLocaleDateString();
+document.getElementById("time").innerHTML=t;
+document.getElementById("date").innerHTML=date;
+
+// to Display Minutes instead of Seconds
+if (counter >= 60){
+document.getElementById("counter").innerHTML=Math.floor(counter/60) + counter;
+}	
+else document.getElementById("counter").innerHTML=counter;
+counter ++;
+}
+</script>
+
+<!-- Style Sheet here -->
+<style type="text/css">
+h1 {
+	font-family: 'Press Start 2P', cursive;
+}
+.button {
+	-moz-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	-webkit-box-shadow:inset 0px 0px 0px 1px #ffffff;
+	box-shadow:inset 0px 0px 0px 1px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family: 'Press Start 2P', cursive;
+	font-size:2em;
+	font-weight:bold;
+	text-align: center;
+	padding:11px 22px;
+	text-decoration:none;
+	text-shadow:2px 2px 0px #ffffff;
+	width: 100%;
+	height: 80px;
+}
+.button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+.button:active {
+	position:relative;
+	top:1px;
+}
+.display{
+	background-color: #00FF0F;
+	font-family: 'Wallpoet', cursive;
+	font-size: 25px;
+	width: 100%;
+	height: 50px;
+}
+</style>
+</head>
+<h1>Taschenrechner</h1>
+<form name="Rechner" action="" onSubmit="Ergebnis();return false;">
+<table border="5" cellpadding="10" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#B0B0B0">
+<input type="text" name="Display" id="Display" align="right" class="display" autofocus="focus" width="100%"></td>
+</tr><tr>
+<td  bgcolor="#c0c0c0">
+<table border="0" cellpadding="0" cellspacing="2" width="100%">
+<tr>
+<td><input type="button" class="button" value="  7   " onClick="Hinzufuegen('7')"></td>
+<td><input type="button" class="button" value="  8   " onClick="Hinzufuegen('8')"></td>
+<td><input type="button" class="button" value="  9   " onClick="Hinzufuegen('9')"></td>
+<td><input type="button" class="button" value="  +   " onClick="Hinzufuegen('+')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="  4   " onClick="Hinzufuegen('4')"></td>
+<td><input type="button" class="button" value="  5   " onClick="Hinzufuegen('5')"></td>
+<td><input type="button" class="button" value="  6   " onClick="Hinzufuegen('6')"></td>
+<td><input type="button" class="button" value="  -   " onClick="Hinzufuegen('-')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="  1   " onClick="Hinzufuegen('1')"></td>
+<td><input type="button" class="button" value="  2   " onClick="Hinzufuegen('2')"></td>
+<td><input type="button" class="button" value="  3   " onClick="Hinzufuegen('3')"></td>
+<td><input type="button" class="button" value="  *   " onClick="Hinzufuegen('*')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="  =   " onClick="Ergebnis()"></td>
+<td><input type="button" class="button" value="  0   " onClick="Hinzufuegen('0')"></td>
+<td><input type="button" class="button" value="  .   " onClick="Hinzufuegen('.')"></td>
+<td><input type="button" class="button" value="  /   " onClick="Hinzufuegen('/')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="sqrt" onClick="Sonderfunktion('sqrt')"></td>
+<td><input type="button" class="button" value=" pow  " onClick="Sonderfunktion('pow')"></td>
+<td><input type="button" class="button" value=" log  " onClick="Sonderfunktion('log')"></td>
+<td><input type="reset"  class="button" value="  C   "></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="sin" onClick="Sonderfunktion('sin')"></td>
+<td><input type="button" class="button" value="cos" onClick="Sonderfunktion('cos')"></td>
+<td><input type="button" class="button" value="tan " onClick="Sonderfunktion('tan')"></td>
+<td><input type="button" class="button" value="2^x " onClick="Sonderfunktion('2hochx')"></td>
+</tr>
+<tr>
+<td><input type="button" class="button" value="Rad-Deg" onClick="toDegrees()"></td>
+<td><input type="button" class="button" value="Deg-Rad" onClick="toRadians()"></td>
+<td><input type="button" class="button" value="&pi;" onClick="use('pi')"></td>
+<td><input type="button" class="button" value="e" onClick="use('e')"></td>
+</tr>
+<tr>
+<td><!-- some ideas I didn't finished: <input type="radio" name="deg" id="deg" value="deg" checked> Deg <br />
+<input type="radio" name="deg" id="deg" value="rad"> Rad-->
+<input type="button" class="button" value="Set Dig" onClick="Round()">
+</td>
+<td>Counter: <div id="counter"></div></td>
+<td>Datum: <div id="date"></div></td>
+<td>Zeit: <div id="time"></div></td>
+</tr>
+</table>
+</td></tr></table> <!-- ugly Table in a Table style -->
+</form>
+</body>
+</html>

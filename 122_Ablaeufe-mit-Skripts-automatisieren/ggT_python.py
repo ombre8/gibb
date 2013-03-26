@@ -9,15 +9,16 @@ a = input("a = ")
 b = input("b = ")
 
 # Tauschen falls a kleiner ist
-if (a < b):
+if (a > b):
   x = a
   a = b
   b = x
 
 def ggt(a,b):
   while True:
+    a, b = b, int(a) % int(b)
     yield int(a),int(b)
-    a, b = int(a) % int(b), a
+    if b == 0 : break
 
 g = ggt(a,b)
 
@@ -26,6 +27,4 @@ counter = 1
 for x in g:
   print("Schritt nach Euklid: " + str(counter) + " = " + str(x))
   counter += 1
-# ValueError: invalid literal for int() with base 10: ''
- # if  int(str(x[2:str(x).find(",")])) <= 0 : break
 print

@@ -17,35 +17,35 @@ PC = input('Postkonto NR. =')
 print("Ihre Daten werden Überprüft:")
 
 
-#Überprüfen der Eingabe, bei Fehler nachfragen bis korrekt:
+#Überprüfen der Eingabe, bei Fehler nachfragen bis korrekt: (weniger strickte Lösungen im Kommentar)
 while True:
-  if re.match('^[A-Z]{1}[a-z]*\s{1}[A-Z]{1}[a-z]*$', Name):
+  if re.match('^[A-Z]{1}[a-z]*\s{1}[A-Z]{1}[a-z]*$', Name): #('^\w+(\s\w+)+$', name)
     break
   Name = input('Name Vorname = ')
 
 while True:
-  if re.match('^([a-zA-Z])*\s{1}[1-9]{1,}$', Str):
+  if re.match('^([a-zA-Z])*\s{1}[0-9]{1,}$', Str): #('^(\w+(\s|\-|\'))+\d+[a-z]?$', adr)
     break
   Str = input('Strasse HausNr. = ')
 
 while True:
-  if re.match('[0-9]{4}\s{1}([A-Za-z])*$', PlzOrt):
+  if re.match('[0-9]{4}\s{1}([A-Za-z])*$', PlzOrt): #('^\d{4}((\s|\-|\')\w+)+$', cty)
     break
   PlzOrt = input('Plz Ort = ')
 
 while True:
-  if re.match('^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,}', Email):
+  if re.match('^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,}', Email): #('^[a-zA-zZ0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$', mail)
     break
   Email = input('Email = ')
 
 while True:
-  if re.match('([0-9]{1,2}(.|/)){2}(19|20)[0-9]{2}$', Geb):
+  if re.match('([0-9]{1,2}(.|/)){2}(19|20)[0-9]{2}$', Geb): #('^\d{2}\.\d{2}\.\d{4}$', birth)
     break
   Geb = input('Geburtsdatum "DD.MM.YYYY" = ')
 
 while True:
-  if re.match('^[0-9]{1,2}-[0-9]{2,15}-[0-9]{1,2}$', PC):
+  if re.match('^[0-9]{1,2}-[0-9]{2,15}-[0-9]{1,2}$', PC): #('^\d{1-2}\-\d{4,}\-\d$', pc)
     break
   PC = input('Postkonto Nr. =')
 
-print("Alle Daten sind Korrekt, danke und auf Wiedersehen")
+print("Alle Daten sind korrekt, danke und auf Wiedersehen")

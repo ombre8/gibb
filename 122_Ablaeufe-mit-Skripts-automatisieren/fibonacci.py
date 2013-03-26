@@ -13,5 +13,5 @@ counter = 0
 for x in f:
   print("fib(" +str(counter) +") = " +str(x))
   counter += 1
-  if counter > 25: break
+  if counter > 50: break
 print
