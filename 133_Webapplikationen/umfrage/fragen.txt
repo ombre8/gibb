@@ -1,0 +1,17 @@
+\ Dies ist eine Kommentarzeile und wird ignoriert:
+\ Beginnen Sie eine Zeile mit einem Stern (*) um diese Zeile als Heading 1 zu markieren
+\ Beginnen Sie eine Zeile mit einem Bang (!) um diese Zeile als Heading 2 zu markieren
+\ Beginnen Sie eine Zeile mit einem Slash (/) um diese Zeile als Absatz zu definieren
+* Dies ist eine Umfrage f&uuml;r das Modul 133 an der GIBB
+/ Die Umfrage wird anonym abgespeichert, falls Sie zu einem sp&auml;teren Zeitpunkt &Auml;nderungen vornehmen m&ouml;chten, bitte ich Sie hier ihre Informationen anzugeben. Falls Sie m&ouml;chten d&uuml;rfen Sie eine Email-Adresse angeben, die Anonymit&auml;t ist dann jedoch nicht mehr gew&auml;hrleistet
+! Zu ihrer Person
+@ Name:
+@ Passwort:
+@ Email:
+! Zum Modul
+Wie hat die das Modul im Allgemeinen gefallen:
+Wie haben dir die Aufgabenstellungen gefallen:
+Wie haben dir die Arbeitsbl&auml;tter gefallen: 
+! Zur Lehrperson
+Menge des Frontalunterrichtes:
+Individiuelle Unterst&uuml;tzung:
