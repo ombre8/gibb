@@ -4,24 +4,84 @@
 <title>Eine Umfrage</title>
 </head>
 <body>
-<h1>Dies ist eine Umfrage f&uml;r das Modul 133 an der GIBB</h1>
-<p> Herzlichen Dank, dass Sie sich die Zeit genommen haben die Umfrage auszufüllen. Ihre Antworten wurden folgendermassen gespeichert:
-<h2>Zum Modul</h2>
-<p>Wie hat die das Modul im Allgemeinen gefallen: <br />
+<?php
+//Einlesen der Fragen:
+$fragen = fopen("fragen.txt", 'r');
 
-</p>
-<p>Wie haben dir die Aufgabenstellungen gefallen: <br />
+//Variable Zeilennummer:
+	$zeilenNr = 1;
+//Umfrage generieren
+while (!feof($fragen)){
+	$zeile = fgets($fragen, 999);
+	//Formular Block
+	for ($i = 1; $i <= 6; $i++){
+		$form .= '<input type="radio" name="'.$zeilenNr.'" value="'.$i.'" />'.$i;
+		switch ($i){
+			case 1:
+			$form .= ' - Schlecht <br />';
+			break;
+			case 6:
+			$form .= ' - Super <br />';
+			break;
+			default:
+			$form .= '<br />';
+		}
+	}
+	// Format:
+	// h1
+	if (substr($zeile,0,1) == "*"){
+		$output = "<h1>";
+		$output .= substr($zeile,2);
+		$output .= "</h1>";	
+	}	
+	// h2
+	else if (substr($zeile,0,1) == "!"){
+		$output = "<h2>";
+		$output .= substr($zeile,2);
+		$output .= "</h2>";
+	}
+	// Abschnitt
+	else if (substr($zeile,0,1) == "/"){
+		$output = "<p>";
+		$output .= substr($zeile,2);
+		$output .= "</p>";	
+	}
+	// Kommentar
+	else if (substr($zeile,0,1) == "\\"){
+		$output = "";
+	}
+	else if (substr($zeile,0,1) == "@"){
+		if (strpos('asswor',$zeile) == true){ //check ain't working yet
+			$output = substr($zeile,2);
+			$output .= ' <input type="password" name="password" /><br />'; //ToDo: change Name to substr
+		}
+		else if (strpos('mail',$zeile) == true){
+			$output = substr($zeile,2);
+			$output .= ' <input type="email" name="email" /><br />'; //ToDo: change Name to substr
+		}
+		else {
+			$output = substr($zeile,2);
+			$output .= ' <input type="text" name="name" /><br />'; //ToDo: change Name to substr
+		}
+	}
+	// Frage
+	else {
+		$output = "<p>";
+		$output .= $zeile;
+		$output .= "<br>";
+		$output .= $form;
+		$output .= "</p>";			
+	}
+	//ausgeben
+	echo $output;
+	
+	//Variabeln aktuallisieren
+	$form = "";
+	$zeilenNr += 1;
+}
 
-</p>
-<p>Wie haben dir die Arbeitsblätter gefallen: <br />
-
-</p>
-<h2>Zur Lehrperson</h2>
-<p>Menge des Frontalunterrichtes: <br />
-
-</p>
-<p>Individiuelle Unterstützung: <br />
-
-</p>
+//Datei schliessen
+fclose($fragen);
+?>
 </body>
 </html>
