@@ -90,7 +90,19 @@ function speichern(){
 	fclose($datei);
 }
 
-function antworten(){
-  
+function antworten($benutzer){
+	$fragen = fopen('fragen.txt',r);
+        $antworten = fopen('antworten.txt', r);
+	//extract Antworten
+	while(!feof($antworten)){
+		$zeile=fgets($antworten);
+		if ($substr($zeile, ??) == $benutzer // evtl. regex bis § besser
+			split $zeile to array
+	}
+	while(!feof($fragen)){
+		
+	}
+	fclose($fragen)
+	fclose($antworten)	
 }
 ?>
