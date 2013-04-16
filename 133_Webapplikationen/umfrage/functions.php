@@ -46,19 +46,19 @@ function fragen(){
 		  $output = "";
 	  }
 	  else if (substr($zeile,0,1) == "@"){
-		  if (strpos('asswor',$zeile) == true){ //check ain't working yet
-			  $output = substr($zeile,2);
-			  $output .= ' <input type="password" name="password" /><br />'; //ToDo: change Name to substr
-		  }
-		  else if (strpos('mail',$zeile) == true){
-			  $output = substr($zeile,2);
-			  $output .= ' <input type="email" name="email" /><br />'; //ToDo: change Name to substr
-		  }
-		  else {
-			  $output = substr($zeile,2);
-			  $output .= ' <input type="text" name="name" /><br />'; //ToDo: change Name to substr
-		  }
-	  }
+		   $output = substr($zeile,2);
+		   if (preg_match("/^[P|p]{1}asswor[d|t]{1}$/",substr($zeile,2,-2))){
+			   $type = 'password';
+		   }
+		   else if (preg_match("/^[E|e]*[-]*[M|m]ail$/",substr($zeile,2,-2))){
+			   $type = 'email';
+		   }
+		   else
+		   {
+			   $type = 'text';
+		   }
+		   $output .= ' <input type="'.$type.'" name="'.substr($zeile,2,-2).'" /><br />'; 
+		    }
 	  // Frage
 	  else {
 		  $output = "<p>";
