@@ -90,19 +90,25 @@ function speichern(){
 	fclose($datei);
 }
 
-function antworten($benutzer){
-	$fragen = fopen('fragen.txt',r);
-        $antworten = fopen('antworten.txt', r);
-	//extract Antworten
-	while(!feof($antworten)){
-		$zeile=fgets($antworten);
-		if ($substr($zeile, ??) == $benutzer // evtl. regex bis § besser
-			split $zeile to array
-	}
-	while(!feof($fragen)){
-		
-	}
-	fclose($fragen)
-	fclose($antworten)	
+function antworten(){
+  
+}
+
+
+function title()
+{
+	//Einlesen der Fragen:
+  $fragen = fopen("fragen.txt", 'r');
+  
+  //Variable Zeilennummer:
+	  $zeilenNr = 1;
+  //Umfrage generieren
+  while (!feof($fragen)){
+	  $zeile = fgets($fragen, 999);
+		 if (substr($zeile,0,1) == "*"){
+		  $title = substr($zeile,2);
+		 }	
+  }
+  echo $title;
 }
 ?>
