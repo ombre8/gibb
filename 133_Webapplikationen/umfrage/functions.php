@@ -91,6 +91,11 @@ function speichern(){
 }
 
 function antworten(){
+	$lines = file($antworten, FILE_IGNORE_NEW_LINES);
+	$answers = explode("§",$lines)
+}
+
+function output(){
   
 }
 
@@ -100,8 +105,6 @@ function title()
 	//Einlesen der Fragen:
   $fragen = fopen("fragen.txt", 'r');
   
-  //Variable Zeilennummer:
-	  $zeilenNr = 1;
   //Umfrage generieren
   while (!feof($fragen)){
 	  $zeile = fgets($fragen, 999);
