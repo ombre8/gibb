@@ -91,12 +91,26 @@ function speichern(){
 }
 
 function antworten(){
-	$lines = file($antworten, FILE_IGNORE_NEW_LINES);
-	$answers = explode("§",$lines)
+	$lines = file("antworten.txt", FILE_IGNORE_NEW_LINES);
+	$answers = explode("§",$lines);
+	return $answers;
+}
+
+function avg(){
+	antworten();
+	//länge bestimmen
+	//
+	for (int $i=$anzFragen; $i<0; $i--){
+		for (int $j=$anzAntworten; $j<0; $j--){
+			$avg[$i] += $answers[$i][$j];
+		}
+		$avg[i] = $avg[i] / $anzAntworten;
+	}	
+	return $avg;
 }
 
 function output(){
-  
+	
 }
 
 
