@@ -80,19 +80,27 @@ function fragen(){
 }
 
 function speichern(){
-	$datei = fopen("antworten.txt", 'a');
-	foreach ($_POST as $antwort){
-		$antworten .= $antwort;
-		$antworten .= '§';
+	foreach ($_POST as $key => $value){
+		$antworten .= $value."§";
 	}
-	$antworten .= PHP_EOL;
-	$f=file_put_content($datei,$antworten);
+	$antworten .= "\n";
+	$datei = fopen("antworten.txt", 'a');
+	fwrite ($datei, $antworten);
 	fclose($datei);
 }
 
 function antworten(){
-	$lines = file("antworten.txt", FILE_IGNORE_NEW_LINES);
-	$answers = explode("§",$lines);
+	//$lines = file("antworten.txt");
+	$datei = fopen('antworten.txt', 'r') or die("could not openfile");
+	$i = 1;
+	while (!feof($datei))
+	{
+		$linie = fgets(datei);
+		$antwort = explde("§",$linie);
+		$answers[$i] = $antwort;
+		$i += 1;
+	}
+//	$answers = explode("§",$lines);
 	return $answers;
 }
 
@@ -100,8 +108,10 @@ function avg(){
 	antworten();
 	//länge bestimmen
 	//
-	for (int $i=$anzFragen; $i<0; $i--){
-		for (int $j=$anzAntworten; $j<0; $j--){
+	$anzFragen = 0;
+	$anzAntworten = 0;
+	for ($i=$anzFragen; $i<0; $i--){
+		for ($j=$anzAntworten; $j<0; $j--){
 			$avg[$i] += $answers[$i][$j];
 		}
 		$avg[i] = $avg[i] / $anzAntworten;
@@ -110,7 +120,71 @@ function avg(){
 }
 
 function output(){
-	
+	antworten();
+	  //Einlesen der Fragen:
+  $fragen = fopen("fragen.txt", 'r');
+    //Variable Zeilennummer:
+	  $zeilenNr = 1;
+  //Umfrage generieren
+  while (!feof($fragen)){
+	  $zeile = fgets($fragen, 999);
+	  $form .= $answers[$zeilrnNr];
+	  // Format:
+	  // h1
+	  if (substr($zeile,0,1) == "*"){
+		  $output = "<h1>";
+		  $output .= substr($zeile,2);
+		  $output .= "</h1>";	
+	  }	
+	  // h2
+	  else if (substr($zeile,0,1) == "!"){
+		  $output = "<h2>";
+		  $output .= substr($zeile,2);
+		  $output .= "</h2>";
+	  }
+	  // Abschnitt
+	  else if (substr($zeile,0,1) == "/"){
+		  $output = "<p>";
+		  $output .= substr($zeile,2);
+		  $output .= "</p>";	
+	  }
+	  // Kommentar
+	  else if (substr($zeile,0,1) == "\\"){
+		  $output = "";
+	  }
+	  else if (substr($zeile,0,1) == "@"){
+		   $output = substr($zeile,2);
+		   if (preg_match("/^[P|p]{1}asswor[d|t]{1}$/",substr($zeile,2,-2))){
+			   $type = 'password';
+		   }
+		   else if (preg_match("/^[E|e]*[-]*[M|m]ail$/",substr($zeile,2,-2))){
+			   $type = 'email';
+		   }
+		   else
+		   {
+			   $type = 'text';
+		   }
+		   $output .= $answers[$zeilrnNr];
+		    
+		    }
+	  // Frage
+	  else {
+		  $output = "<p>";
+		  $output .= $zeile;
+		  $output .= "<br>";
+		  $output .= $form;
+		  $output .= "</p>";			
+	  }
+	  //ausgeben
+	  echo $output;
+	  
+	  //Variabeln aktuallisieren
+	  $form = "";
+	  $zeilenNr += 1;
+  }
+  
+  //Datei schliessen
+  fclose($fragen);
 }
 
 

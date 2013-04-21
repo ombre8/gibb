@@ -7,7 +7,8 @@
 </head>
 <body>
 <?php
-antworten();
+speichern();
+output();
 ?>
 </body>
 </html>

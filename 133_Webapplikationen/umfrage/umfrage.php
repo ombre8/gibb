@@ -6,7 +6,7 @@
 <title><?php title() ?></title>
 </head>
 <body>
-<form name="umfrage" action="#" method="post">
+<form name="umfrage" action="auswertung.php" method="post">
 <?php
 fragen();
 ?>
