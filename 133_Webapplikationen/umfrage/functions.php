@@ -80,25 +80,26 @@ function fragen(){
 }
 
 function speichern(){
+	$antworten .= "\r\n";
 	foreach ($_POST as $key => $value){
 		$antworten .= $value."§";
 	}
-	$antworten .= "\n";
-	$datei = fopen("antworten.txt", 'a');
-	fwrite ($datei, $antworten);
-	fclose($datei);
+	//$datei = fopen("antworten.txt", 'a');
+	//fwrite ($datei, $antworten);
+	//fclose($datei);
+	file_put_contents("antworten.txt", $antworten, FILE_APPEND);
 }
 
 function antworten(){
 	//$lines = file("antworten.txt");
 	$datei = fopen('antworten.txt', 'r') or die("could not openfile");
-	$i = 1;
-	while (!feof($datei))
-	{
+	//$i = 1;
+	//while (!feof($datei)){ //feof fliegt auf die Fresse! scheisse mann
+	for ($i=0;$i<3; $i++){	
 		$linie = fgets(datei);
 		$antwort = explode("§",$linie);
 		$answers[$i] = $antwort;
-		$i += 1;
+		//$i += 1;
 	}
 //	$answers = explode("§",$lines);
 	return $answers;
@@ -110,8 +111,8 @@ function avg(){
 	//
 	$anzFragen = 0;
 	$anzAntworten = 0;
-	for ($i=$anzFragen; $i<0; $i--){
-		for ($j=$anzAntworten; $j<0; $j--){
+	for ($i=$anzFragen; $i>0; $i--){
+		for ($j=$anzAntworten; $j>0; $j--){
 			$avg[$i] += $answers[$i][$j];
 		}
 		$avg[i] = $avg[i] / $anzAntworten;
@@ -121,6 +122,7 @@ function avg(){
 
 function output(){
 	antworten();
+	var_dump($answers);
   //Einlesen der Fragen:
   $fragen = fopen("fragen.txt", 'r') or die("could not open file");
     //Variable Zeilennummer:
@@ -176,7 +178,6 @@ function output(){
 		  $output .= "</p>";			
 	  }
 	  //ausgeben
-	  echo 'hallo';
 	  echo $output;
 	  
 	  //Variabeln aktuallisieren

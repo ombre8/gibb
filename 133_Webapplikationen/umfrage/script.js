@@ -1,4 +1,4 @@
-// JavaScript Document
+﻿// JavaScript Document
 function chkName(text) {
 	    var re ="/^[a-zA-Z]*$/";
 	    if (re.test(text)) return true;
