@@ -96,7 +96,7 @@ function antworten(){
 	while (!feof($datei))
 	{
 		$linie = fgets(datei);
-		$antwort = explde("§",$linie);
+		$antwort = explode("§",$linie);
 		$answers[$i] = $antwort;
 		$i += 1;
 	}
@@ -121,8 +121,8 @@ function avg(){
 
 function output(){
 	antworten();
-	  //Einlesen der Fragen:
-  $fragen = fopen("fragen.txt", 'r');
+  //Einlesen der Fragen:
+  $fragen = fopen("fragen.txt", 'r') or die("could not open file");
     //Variable Zeilennummer:
 	  $zeilenNr = 1;
   //Umfrage generieren
@@ -176,6 +176,7 @@ function output(){
 		  $output .= "</p>";			
 	  }
 	  //ausgeben
+	  echo 'hallo';
 	  echo $output;
 	  
 	  //Variabeln aktuallisieren
