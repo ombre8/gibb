@@ -80,13 +80,50 @@ function fragen(){
 }
 
 function speichern(){
+	  //Einlesen der Fragen:
+	 // $fragen = fopen("fragen.txt", 'r');
+//	  //Variable Zeilennummer:
+//	  $zeilenNr = 0;
+	  //Umfrage generieren
+	 // $antworten .= "\r\n";
+	  //while (!feof($fragen)){
+//		  $zeile = fgets($fragen, 999);
+//		  if (substr($zeile,0,1) != "*" | "!"  | "/" | "\\" ){
+//			if (is_null($_POST[$zeilenNr])){
+//				$antwort = 3.5;
+//				}
+//			else $antwort = $_POST[$zeilenNr];
+//			$antworten .= $antwort."§";  		
+//		  }
+//		  $zeilenNr += 1;	
+//	  }
+	  
+	  //Datei schliessen
+	//  fclose($fragen);
 	$antworten .= "\r\n";
+	$oldkey = 12;
+	$file = 'fragen.txt';
+	$lines = file($file);
 	foreach ($_POST as $key => $value){
+		if ($key == "Passwort")
+		$value = md5($value);
+		if ($key == "Name")
+		$value = md5($value);
+		if (gettype($key) == "integer"){
+			if ($key != $oldkey + 1){
+				for ($i = $oldkey; $i < $key-1; $i++){
+					if (substr($lines[$i],0,1) != "!"){
+						$antworten .= "3.5§";
+					}
+				}
+			}
+			$oldkey = $key;
+		}
 		$antworten .= $value."§";
 	}
-	//$datei = fopen("antworten.txt", 'a');
-	//fwrite ($datei, $antworten);
-	//fclose($datei);
+	$datei = fopen("antworten.txt", 'a');
+	fwrite ($datei, $antworten);
+	fclose($datei);
 	file_put_contents("antworten.txt", $antworten, FILE_APPEND);
 }
 
@@ -131,6 +168,7 @@ function avg(){
 }
 
 function output(){
+	//var_dump($_POST);
 	$answers = antworten();
 	//var_dump($answers);
   //Einlesen der Fragen:
@@ -139,7 +177,7 @@ function output(){
 	  $zeilenNr = 0;
 	  $last = count($answers);
 	  // echo $last;
-	  var_dump($answers[$last]);
+	  //var_dump($answers[$last]);
   //Umfrage generieren
   while (!feof($fragen)){
 	  $zeile = fgets($fragen, 999);
@@ -179,7 +217,10 @@ function output(){
 			 {
 				 $type = 'text';
 			 }
-			 $output .= $answers[$last][$zeilenNr]; 
+			 if ($type == "password" | $type == "text")
+			 $output .= " wurde verschl&uuml;sselt abgelegt <br />";
+			 else
+			 $output .= $answers[$last][$zeilenNr]."<br />"; 
 			 $zeilenNr += 1;
 			  
 		 }
@@ -188,6 +229,12 @@ function output(){
 			$output = "<p>";
 			$output .= $zeile;
 			$output .= "<br>";
+			$output .= '<div style="height:10px; width:60px;overflow:hidden;">';
+			for ($i = 1; $i <= $answers[$last][$zeilenNr]; $i++)
+				$output .= '<div style="width:10px; height:10px; background-color:#00F; float:left;"></div>';
+			for ($i = $answers[$last][$zeilenNr]; $i <6; $i++)
+				$output .= '<div style="width:10px; height:10px; background-color:#ccc; float:left;"></div>';
+			$output .= '</div>';
 			$output .= $answers[$last][$zeilenNr];
 			$output .= "</p>";		
             $zeilenNr += 1;	
