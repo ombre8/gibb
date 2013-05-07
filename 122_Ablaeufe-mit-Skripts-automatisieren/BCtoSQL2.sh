@@ -13,6 +13,7 @@ if [ $# != 3 ];
   dbfile=$1
   csvfile=$2
   table=$3
+  separator=";"
 fi
 
 #And now the Magic:
@@ -20,7 +21,7 @@ fi
 #Header greation
 Code=ISO-8859-1
 attributeList="$( head -n 1 ${csvfile} | iconv -f ${Code} | tr "${separator}" "\n" )"
-echo "${attributeList}"
+#echo "${attributeList}"
 sanedAttributeList="$( echo "${attributeList}" | while read attribute
 do
    # Sonderzeichen rausschneiden und upper to lowercase
@@ -31,8 +32,10 @@ done )"
 # letztes Komma/Leerzeichen entfernen
 sanedAttributeList="$( echo "${sanedAttributeList}" | rev | cut -c 3- | rev )"
 # Headers to db
+#echo ${sanedAttributeList}
 sqlite3 $dbfile "CREATE TABLE ${table} (${sanedAttributeList});"
 
-# Content to db
-echo ".separator \";\"" | sqlite3 $dbfile
-echo ".import $csvfile $table" | sqlite3 $dbfile
+# Content to dba
+#sqlite3 $dbfile ".separator \";\" \n .import ${csvfile} ${table}"
+#echo ".separator \";\"" | sqlite3
+echo -e ".separator \";\"\n.import $csvfile $table" | sqlite3 $dbfile
