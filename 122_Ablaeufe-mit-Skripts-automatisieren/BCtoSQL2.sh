@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# not quite working yet...
+# import a CSV into sqlite3 db
 #
 
 error="Usage: BCtoSQL2.sh dbfile csvfile table"
