@@ -96,21 +96,44 @@ function footer(){
 // funny Stuff
 
 function table(){
+	if(isset($_GET['mitarbeiterId'])){ $filterMitarbeiter = $_GET['mitarbeiterId'];}
+	if(isset($_GET['datumAbrechnung'])){ $filterDatum = $_GET['datumAbrechnung']; }
+	if (isset ($filterMitarbeiter))
+		$filter = "WHERE mitarbeiterId=".$filterMitarbeiter;
+	if (isset($filterMitarbeiter) && isset($filterDatum))
+		$filter .= "AND datumAbrechnung=".$filterDatum;
+	else if (isset ($filterDatum))
+		$filter = "WHERE datumAbrechnung=".$filterDatum;
+	else $filter = "";
+	if (isset($_GET['order'])){
+		if(in_array($_GET['order'], array("id", "mitarbeiterId", "spesenArt", "betrag", "waehrungskurs", "datumAbrechnung", "datumGenehmigung", "genehmigtDurch", "datumAuszahlung")))
+		$order = $_GET['order'];}
+	else
+		$order = 'id';
+	if(isset($_GET['order2'])){
+		if($_GET['order2'] == false || $_GET['order2'] == 'ASC'){
+			$order_2 = 'DESC';
+		}
+		else{
+			$order_2 = 'ASC';
+		}
+	}
+	else $order_2 = 'ASC';
 	$con = dbConnect();
-	$query = "SELECT * FROM gibb_spesen";
+	$query = "SELECT * FROM gibb_spesen ".$filter." ORDER BY ".$order.' '.$order_2;
 	$table=queryDb($con, $query);
 	echo "<p>&Uuml;bersicht &uuml;ber alle Speseninformationen</p>
 	<table width='100%'>
 		<tr>
-			<td>Nummer</td>
-			<td>Mitarbeiter</td>
-			<td>Art</td>
-			<td>Betrag</td>
-			<td>W&auml;hrungskurs</td>
-			<td>Datum Abrechnung</td>
-			<td>Datum Genehmigung</td>
-			<td>Genehmigt Durch</td>
-			<td>Datum Auszahlung</td>
+			<td><a href='?order=id&order2=".$order_2."'>Nummer</a></td>
+			<td><a href='?order=mitarbeiterId&order2=".$order_2."'>Mitarbeiter</a></td>
+			<td><a href='?order=spesenArt&order2=".$order_2."'>Art</a></td>
+			<td><a href='?order=betrag&order2=".$order_2."'>Betrag</a></td>
+			<td><a href='?order=waehrungskurs&order2=".$order_2."'>W&auml;hrungskurs</a></td>
+			<td><a href='?order=datumAbrechnung&order2=".$order_2."'>Datum Abrechnung</a></td>
+			<td><a href='?order=datumGenehmigung&order2=".$order_2."'>Datum Genehmigung</a></td>
+			<td><a href='?order=genehmigtDurch&order2=".$order_2."'>Genehmigt Durch</a></td>
+			<td><a href='?order=datumAuszahlung&order2=".$order_2."'>Datum Auszahlung</a></td>
 			<td>Genehmigen</td>
 		</tr>";
 	while ($row = mysqli_fetch_array($table)){
