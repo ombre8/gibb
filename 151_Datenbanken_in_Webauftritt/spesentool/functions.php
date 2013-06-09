@@ -43,7 +43,6 @@ function chooseAction(){
 	}
 	switch($action)
 	{
-		
 		case "table":
 			head();
 			table();
@@ -57,6 +56,7 @@ function chooseAction(){
 		case "postForm":
 			head();
 			save();
+			table();
 			footer();
 			break;
 		case "updateForm":
@@ -64,6 +64,7 @@ function chooseAction(){
 			update();
 			table();
 			footer();
+			break;
 		case "ok":
 			head();
 			ok();
