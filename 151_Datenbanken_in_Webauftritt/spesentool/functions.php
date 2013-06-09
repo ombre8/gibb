@@ -59,6 +59,16 @@ function chooseAction(){
 			save();
 			footer();
 			break;
+		case "updateForm":
+			head();
+			update();
+			table();
+			footer();
+		case "ok":
+			head();
+			ok();
+			footer();
+			break;
 		default:
 			//should never happen
 	}
@@ -90,7 +100,7 @@ function table(){
 	$query = "SELECT * FROM gibb_spesen";
 	$table=queryDb($con, $query);
 	echo "<p>&Uuml;bersicht &uuml;ber alle Speseninformationen</p>
-	<table>
+	<table width='100%'>
 		<tr>
 			<td>Nummer</td>
 			<td>Mitarbeiter</td>
@@ -101,20 +111,26 @@ function table(){
 			<td>Datum Genehmigung</td>
 			<td>Genehmigt Durch</td>
 			<td>Datum Auszahlung</td>
+			<td>Genehmigen</td>
 		</tr>";
 	while ($row = mysqli_fetch_array($table)){
-		$query = "SELECT * FROM gibb_mitarbeiter WHERE Id =". $query['id'];
-		$mitarbeiter = queryDb($con, $query);
+		$query2 = "SELECT * FROM gibb_mitarbeiter WHERE Id =". $row['mitarbeiterId'];
+		$mitarbeiter = queryDb($con, $query2);
+		$mitarbeiter = mysqli_fetch_array($mitarbeiter);
 		$mitarbeiterName = $mitarbeiter['Vorname'] . " " . $mitarbeiter['Name'];
-		echo "<tr><td>".$mitarbeiterName."</td>
-		<td>".$query['mitarbeiterId']."</td>
-		<td>".$query['spesenArt']."</td>
-		<td>".$query['betrag']."</td>
-		<td>".$query['waehrungskurs']."</td>
-		<td>".$query['datumAbrechnung']."</td>
-		<td>".$query['datumGenehmigung']."</td>
-		<td>".$query['genehmigtDurch']."</td>
-		<td>".$query['datumAuszahlung']."</td>
+		$query3 = "SELECT * FROM gibb_spesenart WHERE id =". $row['spesenArt'];
+		$spesenart = queryDb($con, $query3);
+		$spesenart = mysqli_fetch_array($spesenart);
+		echo "<tr><td>".$row['id']."</td>
+		<td>".$mitarbeiterName."</td>
+		<td>".$spesenart['text']."</td>
+		<td>".round($row['betrag']/$row['waehrungskurs'],2)." &euro;</td>
+		<td>".$row['waehrungskurs']."</td>
+		<td>".$row['datumAbrechnung']."</td>
+		<td>".$row['datumGenehmigung']."</td>
+		<td>".$row['genehmigtDurch']."</td>
+		<td>".$row['datumAuszahlung']."</td>
+		<td><a href='?site=ok&id=".$row['id']."' alt='ok'><img src='ok.png' /></a></td>
 		</tr>";
 	}
 	echo "</table>";
@@ -137,23 +153,60 @@ function add(){
 		echo "<option value='".$row['id']."'>".$row['text']."</option>";
 	};
 	echo "</select></p>
-	<p>Betrag: <input type='text' name='betrag' />
-	<select name='waehrung' onchange='wechselkurs()'>";
+	<p>Betrag: <input type='text' id='betrag' name='betrag' />
+	<select name='waehrung' id='wechsel' onchange='wechselkurs()'>";
 	$XMLContent=file("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
 	foreach($XMLContent as $line){
 		if(preg_match("/currency='([[:alpha:]]+)'/",$line,$currencyCode)){
 			if(preg_match("/rate='([[:graph:]]+)'/",$line,$rate)){
-				echo "<option value'".$currencyCode[1]."'>".$currencyCode[1]."</option>";
+				echo "<option value='".$rate[1]."'>".$currencyCode[1]."</option>";
 			}
 		}
 	};
 	echo "</select>	</p>
-	<p>W&auml;hrungkurs: <input type='text' value='1' name='waehrungskurs' disabled />Javascript übergabe des Kurs via Währung!!!</p> 
+	<p>W&auml;hrungkurs: <input type='text' value='1' id='kurs' name='waehrungskurs' disabled /></p> 
+	<p>Kosten: <input type='text' id='euro' name='preis' disabled /> &euro;</p>
 	<p>Datum:";
 	DateDropDown(90, "DropDate");
-	echo" </p>
-	";
+	echo" </p>";
 	echo '<input type="hidden" name="action" id="action" value="postForm">
+	<input type="reset" value="Reset"> <input type="submit" value="Send">
+	</form>';
+}
+
+function ok(){
+	$con = dbConnect();
+	$query = "SELECT * FROM gibb_mitarbeiter";
+	$mitarbeiter=queryDb($con, $query);
+	$query1 = "SELECT * FROM gibb_spesen WHERE id=".$_GET['id'];
+	$table=queryDb($con, $query1);
+	$table = mysqli_fetch_array($table);
+	$query3 = "SELECT * FROM gibb_mitarbeiter WHERE id=".$table['mitarbeiterId'];
+	$mitarbeiter2=queryDb($con, $query3);
+	$query2 = "SELECT * FROM gibb_spesenart WHERE id =".$table['spesenArt'];
+	$spesenart = queryDb($con, $query2);
+	$mitarbeiter2 = mysqli_fetch_array($mitarbeiter2);
+	$mitarbeiterName = $mitarbeiter2['Vorname'] . " " . $mitarbeiter2['Name'];
+	$spesenart = mysqli_fetch_array($spesenart); 
+	echo '<form action="?site=table&id='.$_GET['id'].'" method="post" enctype="multipart/form-data">
+	<p>Mitarbeiter: <input type="text" name="mitarbeiter" value="'.$mitarbeiterName.'" disabled></p>
+	<p>Spesenart: <input type="text" name="spesenArt" value="'.$spesenart['text'].'" disabled></p>
+	<p>Betrag: <input type="text" id="betrag" name="betrag" value="'.$table['betrag'].'" disabled /></p>
+	<p>W&auml;hrungkurs: <input type="text" value="'.$table['waehrungskurs'].'" id="kurs" name="waehrungskurs" disabled /></p>
+	<p>Kosten: <input type="text" id="euro" name="preis" disabled value="'.$table['betrag'] / $table['waehrungskurs'].'" /> &euro;</p>
+	<p>Datum Abrechnung: <imput type="text" name="datum" value="'.$table['datumAbrechnung'].'"></p>
+	<p>Datum Genehmigung:';
+	DateDropDown(90, "datumGenehmigung");
+	echo' </p>
+	<p> Genehmigt durch:<select name="mitarbeiterId">';
+	while ($row = mysqli_fetch_array($mitarbeiter)){
+		echo "<option value'".$row['mitarbeiterId']."'>".$row['Name']." ".$row['Vorname']."</option>";
+	};
+	echo '</select></p>
+	<p>Datum Genehmigung:';
+	DateDropDown(90, "datumAuszahlung");
+	echo' </p>
+	<input type="hidden" name="action" id="action" value="updateForm">
 	<input type="reset" value="Reset"> <input type="submit" value="Send">
 	</form>';
 }
@@ -164,13 +217,30 @@ function save(){
 	$con = dbConnect();
 	$query = "SELECT id FROM gibb_mitarbeiter WHERE Name='".$mitarbeiterName[0]."' AND Vorname='".$mitarbeiterName[1]."'";
 	$mitarbeiterId=queryDb($con, $query);
-	$mitarbeiterId=mysqli_stmt_fetch($mitarbeiterId);
+	$mitarbeiterId=mysqli_fetch_array($mitarbeiterId);
 	$spesenArt=$_POST["spesenArt"];
 	$betrag=$_POST["betrag"];
-	//$betrag=$betrag * $_POST["waehrungskurs"];
-	$datumAbrechnung=$_POST['dropdate'];
-	$datumAbrechnung=strtotime($datumAbrechnung);
-	echo $mitarbeiterId." ".$spesenArt." ".$betrag." ".$datumAbrechnung;
+	$waehrungskurs = $_POST["waehrung"];
+	$datumAbrechnung=$_POST['DropDate'];
+	//$datumAbrechnung=
+	//echo $mitarbeiterId[0]." ".$spesenArt." ".$betrag." ".$datumAbrechnung;
+	$query2 = 'INSERT INTO gibb_spesen (mitarbeiterId, spesenArt, betrag, waehrungskurs, datumAbrechnung)
+				VALUES ("'.$mitarbeiterId[0].'","'.$spesenArt.'","'.$betrag.'","'.$waehrungskurs.'","'.$datumAbrechnung.'");';
+	$result = queryDb($con, $query2);
+}
+
+function update(){
+	//var_dump($_POST);
+	$mitarbeiterName = explode(" ", $_POST['mitarbeiterId']);
+	$con = dbConnect();
+	$query = "SELECT id FROM gibb_mitarbeiter WHERE Name='".$mitarbeiterName[0]."' AND Vorname='".$mitarbeiterName[1]."'";
+	$mitarbeiterId=queryDb($con, $query);
+	$mitarbeiterId=mysqli_fetch_array($mitarbeiterId);
+	$datumGenehmigung=$_POST['datumGenehmigung'];
+	$datumAuszahlung=$_POST['datumAuszahlung'];
+	$query2 = 'UPDATE gibb_spesen (datumGenehmigung, genehmigtDurch, datumAuszahlung)
+	VALUES ("'.$datumGenehmigung.'","'.$mitarbeiterId[0].'","'.$datumAuszahlung.'") WHERE id ='.$_GET['id'].';';
+	$result = queryDb($con, $query2);
 }
 
 function getCurrency(){
@@ -196,7 +266,7 @@ function DateDropDown($size=90,$default="DropDate") {
    // $default = Todays date in m:d:Y format (SEE DATE COMMAND ON WWW.PHP.NET)
    // $skip = if set then the program will skip Sundays and Saturdays
    $skip=0;
-   echo "<select name=dropdate STYLE=\"font-family: monospace;\">\n";
+   echo "<select name=".$default." STYLE=\"font-family: monospace;\">\n";
    for ($i = 0; $i <= $size; $i++) {
       $theday = mktime (0,0,0,date("m") ,date("d")+$i ,date("Y"));
       $option=date("D M j, Y",$theday);
