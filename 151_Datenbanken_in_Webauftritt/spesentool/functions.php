@@ -104,7 +104,7 @@ function table(){
 		$filter .= "AND datumAbrechnung=".$filterDatum;
 	else if (isset ($filterDatum))
 		$filter = "WHERE datumAbrechnung=".$filterDatum;
-	else $filter = "";
+	if (!(isset($filter))) $filter = "";
 	if (isset($_GET['order'])){
 		if(in_array($_GET['order'], array("id", "mitarbeiterId", "spesenArt", "betrag", "waehrungskurs", "datumAbrechnung", "datumGenehmigung", "genehmigtDurch", "datumAuszahlung")))
 		$order = $_GET['order'];}
@@ -145,7 +145,7 @@ function table(){
 		$spesenart = queryDb($con, $query3);
 		$spesenart = mysqli_fetch_array($spesenart);
 		echo "<tr><td>".$row['id']."</td>
-		<td>".$mitarbeiterName."</td>
+		<td><a href=?mitarbeiterId='".$row['mitarbeiterId']."'>".$mitarbeiterName."</a></td>
 		<td>".$spesenart['text']."</td>
 		<td>".round($row['betrag']/$row['waehrungskurs'],2)." &euro;</td>
 		<td>".$row['waehrungskurs']."</td>
