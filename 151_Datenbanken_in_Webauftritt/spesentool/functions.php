@@ -4,7 +4,7 @@
 
 function dbConnect(){
 	// get db-credentials
-	require_once('dbconnection/connection.php');
+	include('dbconnection/connection.php');
 	// Create connection
 	$con=mysqli_connect($dbHost,$dbUsername,$dbPassword,$dbName);
 
@@ -145,6 +145,15 @@ function table(){
 		$query3 = "SELECT * FROM gibb_spesenart WHERE id =". $row['spesenArt'];
 		$spesenart = queryDb($con, $query3);
 		$spesenart = mysqli_fetch_array($spesenart);
+		$query4 = "SELECT * FROM gibb_mitarbeiter WHERE Id =". $row['genehmigtDurch'];
+		$genehmigt = queryDb($con, $query4);
+		//	var_dump($genehmigt);
+		$num_rows = $genehmigt->num_rows;
+		if ($num_rows != 0){
+			$genehmigt = mysqli_fetch_array($genehmigt);
+			$genehmigtName = $genehmigt['Vorname'] . " " . $genehmigt['Name'];
+		}
+	    else $genehmigtName = "Noch nicht genehmigt!";
 		echo "<tr><td>".$row['id']."</td>
 		<td><a href=?mitarbeiterId='".$row['mitarbeiterId']."'>".$mitarbeiterName."</a></td>
 		<td>".$spesenart['text']."</td>
@@ -152,7 +161,7 @@ function table(){
 		<td>".$row['waehrungskurs']."</td>
 		<td>".$row['datumAbrechnung']."</td>
 		<td>".$row['datumGenehmigung']."</td>
-		<td>".$row['genehmigtDurch']."</td>
+		<td>".$genehmigtName."</td>
 		<td>".$row['datumAuszahlung']."</td>
 		<td><a href='?site=ok&id=".$row['id']."' alt='ok'><img src='ok.png' /></a></td>
 		</tr>";
@@ -177,7 +186,7 @@ function add(){
 		echo "<option value='".$row['id']."'>".$row['text']."</option>";
 	};
 	echo "</select></p>
-	<p>Betrag: <input type='text' id='betrag' name='betrag' />
+	<p>Betrag: <input type='text' id='betrag' name='betrag' onchange='wechselkurs()'/>
 	<select name='waehrung' id='wechsel' onchange='wechselkurs()'>";
 	$XMLContent=file("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
 	foreach($XMLContent as $line){
@@ -236,7 +245,7 @@ function ok(){
 }
 
 function save(){
-	var_dump($_POST);
+	//var_dump($_POST);
 	$mitarbeiterName = explode(" ", $_POST['mitarbeiterId']);
 	$con = dbConnect();
 	$query = "SELECT id FROM gibb_mitarbeiter WHERE Name='".$mitarbeiterName[0]."' AND Vorname='".$mitarbeiterName[1]."'";
@@ -246,6 +255,10 @@ function save(){
 	$betrag=$_POST["betrag"];
 	$waehrungskurs = $_POST["waehrung"];
 	$datumAbrechnung=$_POST['DropDate'];
+	$datumAbrechnung = mysql_real_escape_string($datumAbrechnung);
+	//echo $datumAbrechnung;
+	$datumAbrechnung = date('Y-m-d', strtotime(str_replace('-', '/', $datumAbrechnung)));
+	//echo $datumAbrechnung;
 	//$datumAbrechnung=
 	//echo $mitarbeiterId[0]." ".$spesenArt." ".$betrag." ".$datumAbrechnung;
 	$query2 = 'INSERT INTO gibb_spesen (mitarbeiterId, spesenArt, betrag, waehrungskurs, datumAbrechnung)
@@ -262,8 +275,13 @@ function update(){
 	$mitarbeiterId=mysqli_fetch_array($mitarbeiterId);
 	$datumGenehmigung=$_POST['datumGenehmigung'];
 	$datumAuszahlung=$_POST['datumAuszahlung'];
-	$query2 = 'UPDATE gibb_spesen (datumGenehmigung, genehmigtDurch, datumAuszahlung)
-	VALUES ("'.$datumGenehmigung.'","'.$mitarbeiterId[0].'","'.$datumAuszahlung.'") WHERE id ='.$_GET['id'].';';
+	$datumGenehmigung = mysql_real_escape_string($datumGenehmigung);
+	$datumAuszahlung = mysql_real_escape_string($datumAuszahlung);
+	$datumGenehmigung = date('Y-m-d', strtotime(str_replace('-', '/', $datumGenehmigung)));
+	$datumAuszahlung = date('Y-m-d', strtotime(str_replace('-', '/', $datumAuszahlung)));
+	$query2 = 'UPDATE gibb_spesen SET datumGenehmigung = "'.$datumGenehmigung.'", genehmigtDurch = "'.$mitarbeiterId[0].'", datumAuszahlung= "'.$datumAuszahlung.'" WHERE id = "'.$_GET['id'].'";'; //)
+	//VALUES ("'.$datumGenehmigung.'","'.$mitarbeiterId[0].'","'.$datumAuszahlung.'") WHERE id = "'.$_GET['id'].'";';
+	echo $query2;
 	$result = queryDb($con, $query2);
 }
 
@@ -294,7 +312,7 @@ function DateDropDown($size=90,$default="DropDate") {
    for ($i = 0; $i <= $size; $i++) {
       $theday = mktime (0,0,0,date("m") ,date("d")+$i ,date("Y"));
       $option=date("D M j, Y",$theday);
-      $value=date("m:d:Y",$theday);
+      $value=date("Y-m-d",$theday);
       $dow=date("D",$theday);
       if ($dow=="Mon") {
          echo "<option disabled>&nbsp;</option>\n";
