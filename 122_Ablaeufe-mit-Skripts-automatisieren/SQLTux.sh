@@ -7,7 +7,7 @@ userFilter="vm root ombre" #Wer will darf hier gerne noch die Tuxe erfassen...
 ### db erstellen
 dberstellen () {
 
-	sqlite3 ${dbfile} "CREATE TABLE ${tableName} (id INTEGER PRIMARY KEY, name TEXT, uid INTEGER, gid INTEGEER, home TEXT);"
+	sqlite3 ${dbfile} "CREATE TABLE ${tableName} (id INTEGER PRIMARY KEY, name TEXT, uid INTEGER, gid INTEGER, home TEXT);"
 }
 
 ### Kontrollieren ob das db-File bereits vorhanden ist.
